@@ -19,15 +19,18 @@ export default function ExperienceForm() {
 
     try {
       setGeneratingId(id);
-      const res = await fetch('/api/ai/generate', {
+      const res = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: context, type: 'experience' })
+        body: JSON.stringify({ 
+          action: 'enhance_bullet',
+          payload: { text: context, type: 'experience' }
+        })
       });
       
       const result = await res.json();
-      if (result.content) {
-        updateExperience(id, { description: result.content });
+      if (result.result) {
+        updateExperience(id, { description: result.result });
       }
     } catch (error) {
       console.error("Failed to generate experience bullet points", error);

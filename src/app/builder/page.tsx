@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import EditorPanel from '@/components/builder/EditorPanel';
 import PreviewPanel from '@/components/builder/PreviewPanel';
+import AIAssistantModal from '@/components/builder/ai/AIAssistantModal';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Download, Sparkles, Layout, X, Check, ArrowLeft } from 'lucide-react';
 
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const { activeTemplate, setTemplate, documentName, setDocumentName } = useResumeStore();
   const router = useRouter();
@@ -70,7 +72,10 @@ export default function BuilderPage() {
         </div>
         
         <div className="flex items-center space-x-3">
-          <button className="flex items-center space-x-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/50">
+          <button 
+            onClick={() => setIsAIModalOpen(true)}
+            className="flex items-center space-x-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/50"
+          >
             <Sparkles className="w-4 h-4" />
             <span className="hidden sm:inline">AI Optimize</span>
           </button>
@@ -171,6 +176,11 @@ export default function BuilderPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* AI Assistant Modal Overlay */}
+      {isAIModalOpen && (
+        <AIAssistantModal onClose={() => setIsAIModalOpen(false)} />
       )}
     </div>
   );

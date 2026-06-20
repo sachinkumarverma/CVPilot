@@ -18,15 +18,18 @@ export default function SummaryForm() {
 
     try {
       setIsGenerating(true);
-      const res = await fetch('/api/ai/generate', {
+      const res = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: context, type: 'summary' })
+        body: JSON.stringify({ 
+          action: 'enhance_bullet',
+          payload: { text: data.summary || context, type: 'grammar' }
+        })
       });
       
       const result = await res.json();
-      if (result.content) {
-        updateSummary(result.content);
+      if (result.result) {
+        updateSummary(result.result);
       }
     } catch (error) {
       console.error("Failed to generate summary", error);

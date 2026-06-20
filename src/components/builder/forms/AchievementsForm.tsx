@@ -1,10 +1,37 @@
 'use client';
 
+import { useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Sparkles, Loader2 } from 'lucide-react';
 
 export default function AchievementsForm() {
   const { data, addAchievement, updateAchievement, removeAchievement } = useResumeStore();
+  const [generatingId, setGeneratingId] = useState<string | null>(null);
+
+  const handleGenerate = async (id: string, text: string) => {
+    if (!text) return;
+
+    try {
+      setGeneratingId(id);
+      const res = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          action: 'enhance_bullet',
+          payload: { text, type: 'achievement' }
+        })
+      });
+      
+      const result = await res.json();
+      if (result.result) {
+        updateAchievement(id, { description: result.result });
+      }
+    } catch (error) {
+      console.error("Failed to generate achievement", error);
+    } finally {
+      setGeneratingId(null);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -18,7 +45,17 @@ export default function AchievementsForm() {
           </button>
           
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Achievement Description</label>
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Achievement Description</label>
+              <button 
+                onClick={() => handleGenerate(ach.id, ach.description)}
+                disabled={generatingId === ach.id || !ach.description}
+                className="flex items-center space-x-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded disabled:opacity-50"
+              >
+                {generatingId === ach.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                <span>{generatingId === ach.id ? 'Enhancing...' : 'AI Enhance'}</span>
+              </button>
+            </div>
             <textarea 
               value={ach.description}
               onChange={(e) => updateAchievement(ach.id, { description: e.target.value })}
