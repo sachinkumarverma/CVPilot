@@ -59,20 +59,24 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="bg-blue-600 p-1.5 rounded-lg">
-                <FileText className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="CVPilot Logo" className="w-full h-full object-contain drop-shadow-sm" />
               </div>
-              <span className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">CVPilot</span>
+              <div className="font-bold text-2xl tracking-wide flex items-center">
+                <span className="text-blue-600 dark:text-blue-500">CV</span>
+                <span className="text-gray-900 dark:text-white">Pilot</span>
+              </div>
             </Link>
           </div>
-          
+
           <div className="hidden md:flex space-x-8 items-center">
             <div className="flex space-x-8 items-center mr-4">
               <Link href="/features" className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">Features</Link>
               <Link href="/templates" className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">Templates</Link>
               <Link href="/pricing" className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">Pricing</Link>
             </div>
-            
+
             <div className="flex space-x-4 items-center pl-4 border-l border-gray-200 dark:border-gray-700 relative">
               <Link href="/builder" className="text-sm font-medium bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 transition-colors shadow-sm">
                 Build Resume
@@ -80,8 +84,8 @@ export default function Navbar() {
 
               {user ? (
                 <div className="relative" ref={profileMenuRef}>
-                  <button 
-                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} 
+                  <button
+                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                     className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-shadow ml-2"
                   >
                     {user.user_metadata?.avatar_url ? (
@@ -123,7 +127,7 @@ export default function Navbar() {
           </div>
 
           <div className="md:hidden flex items-center">
-            <button 
+            <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
             >
@@ -141,12 +145,12 @@ export default function Navbar() {
           <Link href="/pricing" className="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900">Pricing</Link>
           <div className="pt-4 border-t border-gray-200/50 dark:border-white/10 space-y-2 mt-4 flex flex-col gap-2">
             {user ? (
-               <button 
-                 onClick={handleSignOut}
-                 className="block w-full text-center px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 border border-gray-200 dark:border-white/10 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
-               >
-                 Sign Out
-               </button>
+              <button
+                onClick={handleSignOut}
+                className="block w-full text-center px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 border border-gray-200 dark:border-white/10 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
+              >
+                Sign Out
+              </button>
             ) : (
               <Link href="/login" className="block w-full text-center px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">Login</Link>
             )}
