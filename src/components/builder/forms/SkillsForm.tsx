@@ -25,8 +25,8 @@ export default function SkillsForm() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-1.5">
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Add Skills</label>
         <input 
           type="text" 

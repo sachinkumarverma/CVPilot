@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import EditorPanel from '@/components/builder/EditorPanel';
 import PreviewPanel from '@/components/builder/PreviewPanel';
@@ -10,8 +10,13 @@ import { Download, Sparkles, Layout, X, Check, ArrowLeft } from 'lucide-react';
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
-  const { activeTemplate, setTemplate } = useResumeStore();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const { activeTemplate, setTemplate, documentName, setDocumentName } = useResumeStore();
   const router = useRouter();
+  
+  useEffect(() => {
+    document.title = documentName || 'Untitled Resume';
+  }, [documentName]);
   
   const handleTemplateSelect = (templateId: string) => {
     setTemplate(templateId);
@@ -19,14 +24,35 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex flex-col flex-1 h-[calc(100vh-64px)] overflow-hidden bg-gray-50 dark:bg-gray-950 relative print:h-auto print:bg-white print:block">
+    <div className="flex flex-col flex-1 h-[calc(100vh-64px)] overflow-hidden bg-gray-100 dark:bg-gray-900 relative print:h-auto print:bg-white print:block">
       {/* Builder Toolbar */}
       <div className="flex-none h-14 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-white/10 flex items-center justify-between px-4 sm:px-6 shadow-sm z-10 print:hidden">
         <div className="flex items-center space-x-4">
           <button onClick={() => router.back()} className="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-semibold text-gray-900 dark:text-white hidden sm:block">Untitled Resume</h1>
+          <div className="hidden sm:block">
+            {isEditingName ? (
+              <input
+                autoFocus
+                type="text"
+                value={documentName}
+                onChange={(e) => setDocumentName(e.target.value)}
+                onBlur={() => setIsEditingName(false)}
+                onMouseLeave={() => setIsEditingName(false)}
+                onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
+                className="font-semibold text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-800 border border-blue-500 rounded px-2 py-0.5 w-48 outline-none"
+              />
+            ) : (
+              <h1 
+                onClick={() => setIsEditingName(true)}
+                className="font-semibold text-gray-900 dark:text-white px-2 py-0.5 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                title="Click to edit resume name"
+              >
+                {documentName || 'Untitled Resume'}
+              </h1>
+            )}
+          </div>
           <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
             <button 
               onClick={() => setActiveTab('editor')}
@@ -75,7 +101,7 @@ export default function BuilderPage() {
         </div>
         
         {/* Preview Panel (Right) */}
-        <div className={`w-full md:w-1/2 lg:w-[55%] h-full bg-gray-100 dark:bg-gray-900 overflow-y-auto p-4 sm:p-8 flex justify-center ${activeTab === 'editor' ? 'hidden md:flex' : 'flex'} print:w-full print:block print:p-0`}>
+        <div className={`w-full md:w-1/2 lg:w-[55%] h-full bg-gray-100 dark:bg-gray-900 ${activeTab === 'editor' ? 'hidden md:block' : 'block'} print:w-full print:block print:p-0`}>
           <PreviewPanel />
         </div>
       </div>

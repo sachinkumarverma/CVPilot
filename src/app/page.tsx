@@ -106,7 +106,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h2 className="text-3xl font-extrabold text-white tracking-tight text-center">Sarah<br/>Jenkins</h2>
-                    <p className="text-blue-400 font-semibold text-sm mt-2 tracking-wide text-center uppercase">Senior Full Stack</p>
+                    <p className="text-blue-400 font-semibold text-sm mt-2 tracking-wide text-center uppercase">Principal Engineer</p>
                   </div>
                   
                   <div className="space-y-3 text-sm text-gray-300 font-medium">
@@ -118,7 +118,7 @@ export default function Home() {
                   <div>
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-600 pb-2 mb-4">Skills</h3>
                     <div className="flex flex-wrap gap-2">
-                      {['React', 'TypeScript', 'Node.js', 'Python', 'AWS', 'Docker', 'GraphQL'].map(skill => (
+                      {['Go', 'Rust', 'Kubernetes', 'AWS', 'Kafka', 'System Design', 'GraphQL'].map(skill => (
                         <span key={skill} className="px-2.5 py-1 bg-white/10 border border-white/5 text-white text-xs font-semibold rounded-md shadow-sm">
                           {skill}
                         </span>
@@ -130,12 +130,12 @@ export default function Home() {
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-600 pb-2 mb-4">Education</h3>
                     <div className="space-y-4">
                       <div>
-                        <p className="font-bold text-white text-sm">M.S. Software Engineering</p>
-                        <p className="text-gray-400 text-xs font-medium mt-1">UC Berkeley, 2016-2018</p>
+                        <p className="font-bold text-white text-sm">M.S. Computer Science</p>
+                        <p className="text-gray-400 text-xs font-medium mt-1">Stanford University, 2012-2014</p>
                       </div>
                       <div>
                         <p className="font-bold text-white text-sm">B.S. Computer Science</p>
-                        <p className="text-gray-400 text-xs font-medium mt-1">Stanford University, 2012-2016</p>
+                        <p className="text-gray-400 text-xs font-medium mt-1">UC Berkeley, 2008-2012</p>
                       </div>
                     </div>
                   </div>
@@ -158,7 +158,7 @@ export default function Home() {
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-600 pb-2 mb-4">Certifications</h3>
                     <div className="space-y-4">
                       <div>
-                        <p className="font-bold text-white text-sm">AWS Certified Solutions Architect</p>
+                        <p className="font-bold text-white text-sm">AWS Certified Solutions Architect - Professional</p>
                         <p className="text-gray-400 text-xs font-medium mt-1">Amazon Web Services, 2021</p>
                       </div>
                     </div>
@@ -172,7 +172,7 @@ export default function Home() {
                       <User className="w-4 h-4 mr-2"/> Professional Summary
                     </h3>
                     <p className="text-gray-700 text-sm leading-relaxed font-medium">
-                      Results-driven Senior Software Engineer with 8+ years of experience in designing, developing, and scaling high-performance web applications. Adept at leading cross-functional teams and implementing modern cloud architectures to deliver scalable product solutions.
+                      Visionary Principal Software Engineer with 12+ years of experience architecting highly available distributed systems and leading global engineering organizations. Proven track record of designing infrastructure that scales to millions of concurrent users while reducing operational costs.
                     </p>
                   </div>
 
@@ -185,36 +185,36 @@ export default function Home() {
                       {/* Job 1 */}
                       <div>
                         <div className="flex justify-between items-baseline mb-2">
-                          <h4 className="font-bold text-gray-900 text-base">Tech Lead <span className="text-gray-500 font-medium">at InnovateCorp</span></h4>
-                          <span className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded-md">2020 - Present</span>
+                          <h4 className="font-bold text-gray-900 text-base">Principal Engineer <span className="text-gray-500 font-medium">at InnovateCorp</span></h4>
+                          <span className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded-md">2018 - Present</span>
                         </div>
                         <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
-                          <li>Spearheaded the migration of legacy monolithic architecture to a scalable microservices ecosystem, improving system uptime to 99.99%.</li>
-                          <li>Mentored a team of 12 engineers, fostering a culture of continuous integration and agile methodologies.</li>
+                          <li>Architected a multi-region active-active cloud infrastructure on AWS, increasing system reliability to 99.999% for 50M+ active users.</li>
+                          <li>Directed a 40-person engineering org across 4 cross-functional teams, reducing time-to-market for core features by 60%.</li>
                         </ul>
                       </div>
                       
                       {/* Job 2 */}
                       <div>
                         <div className="flex justify-between items-baseline mb-2">
-                          <h4 className="font-bold text-gray-900 text-base">Software Engineer <span className="text-gray-500 font-medium">at CloudSync</span></h4>
-                          <span className="text-xs text-gray-500 font-bold bg-gray-50 px-2 py-1 rounded-md border border-gray-100">2016 - 2020</span>
+                          <h4 className="font-bold text-gray-900 text-base">Senior Software Engineer <span className="text-gray-500 font-medium">at CloudSync</span></h4>
+                          <span className="text-xs text-gray-500 font-bold bg-gray-50 px-2 py-1 rounded-md border border-gray-100">2014 - 2018</span>
                         </div>
                         <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
-                          <li>Developed and deployed real-time data processing pipelines using Apache Kafka and Node.js.</li>
-                          <li>Reduced page load times by 40% through extensive frontend optimizations and implementation of SSR in Next.js.</li>
+                          <li>Designed and implemented a distributed event-streaming platform using Apache Kafka, processing 5B+ events daily with sub-10ms latency.</li>
+                          <li>Optimized database indexing strategies and query execution plans, resulting in a 45% reduction in RDS cloud costs.</li>
                         </ul>
                       </div>
                       
                       {/* Job 3 */}
                       <div>
                         <div className="flex justify-between items-baseline mb-2">
-                          <h4 className="font-bold text-gray-900 text-base">Junior Web Developer <span className="text-gray-500 font-medium">at StartUp Inc</span></h4>
-                          <span className="text-xs text-gray-500 font-bold bg-gray-50 px-2 py-1 rounded-md border border-gray-100">2014 - 2016</span>
+                          <h4 className="font-bold text-gray-900 text-base">Software Engineer <span className="text-gray-500 font-medium">at StartUp Inc</span></h4>
+                          <span className="text-xs text-gray-500 font-bold bg-gray-50 px-2 py-1 rounded-md border border-gray-100">2012 - 2014</span>
                         </div>
                         <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
-                          <li>Built responsive, mobile-first landing pages increasing conversion rates by 25%.</li>
-                          <li>Collaborated with the design team to implement pixel-perfect user interfaces in React.</li>
+                          <li>Developed core backend microservices in Go, handling concurrent transaction processing for the flagship payment gateway.</li>
+                          <li>Built robust CI/CD pipelines using Jenkins and Docker, enabling multiple seamless deployments per day.</li>
                         </ul>
                       </div>
                     </div>

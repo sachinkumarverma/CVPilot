@@ -1,0 +1,42 @@
+'use client';
+
+import { useResumeStore } from '@/store/useResumeStore';
+import { Plus, Trash2 } from 'lucide-react';
+
+export default function AchievementsForm() {
+  const { data, addAchievement, updateAchievement, removeAchievement } = useResumeStore();
+
+  return (
+    <div className="flex flex-col gap-2">
+      {data.achievements.map((ach, index) => (
+        <div key={ach.id} className="p-4 border border-gray-200 dark:border-white/10 rounded-lg bg-gray-50/50 dark:bg-gray-900/50 relative group">
+          <button 
+            onClick={() => removeAchievement(ach.id)}
+            className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+          
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Achievement Description</label>
+            <textarea 
+              value={ach.description}
+              onChange={(e) => updateAchievement(ach.id, { description: e.target.value })}
+              placeholder="e.g. Won 1st place in national hackathon..."
+              rows={2}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none resize-y"
+            />
+          </div>
+        </div>
+      ))}
+      
+      <button 
+        onClick={addAchievement}
+        className="flex items-center justify-center space-x-2 w-full py-3 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-gray-600 dark:text-gray-400 hover:border-blue-500 hover:text-blue-500 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-colors font-medium text-sm"
+      >
+        <Plus className="w-4 h-4" />
+        <span>Add Achievement</span>
+      </button>
+    </div>
+  );
+}

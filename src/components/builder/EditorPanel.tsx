@@ -15,7 +15,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { GripVertical, User, FileText, Briefcase, GraduationCap, Code } from 'lucide-react';
+import { GripVertical, User, FileText, Briefcase, GraduationCap, Code, FolderGit2, Award, Trophy } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -25,13 +25,21 @@ import SummaryForm from './forms/SummaryForm';
 import ExperienceForm from './forms/ExperienceForm';
 import EducationForm from './forms/EducationForm';
 import SkillsForm from './forms/SkillsForm';
+import ProjectsForm from './forms/ProjectsForm';
+import CertificationsForm from './forms/CertificationsForm';
+
+import AchievementsForm from './forms/AchievementsForm';
 
 const sectionIcons: Record<string, React.ReactNode> = {
   personal: <User className="w-5 h-5" />,
   summary: <FileText className="w-5 h-5" />,
   experience: <Briefcase className="w-5 h-5" />,
   education: <GraduationCap className="w-5 h-5" />,
-  skills: <Code className="w-5 h-5" />
+  skills: <Code className="w-5 h-5" />,
+  projects: <FolderGit2 className="w-5 h-5" />,
+  certifications: <Award className="w-5 h-5" />,
+
+  achievements: <Trophy className="w-5 h-5" />
 };
 
 const sectionTitles: Record<string, string> = {
@@ -39,7 +47,11 @@ const sectionTitles: Record<string, string> = {
   summary: 'Professional Summary',
   experience: 'Work Experience',
   education: 'Education',
-  skills: 'Skills'
+  skills: 'Skills',
+  projects: 'Projects',
+  certifications: 'Certifications',
+
+  achievements: 'Achievements'
 };
 
 function SortableSection({ id }: { id: string }) {
@@ -63,6 +75,10 @@ function SortableSection({ id }: { id: string }) {
       case 'experience': return <ExperienceForm />;
       case 'education': return <EducationForm />;
       case 'skills': return <SkillsForm />;
+      case 'projects': return <ProjectsForm />;
+      case 'certifications': return <CertificationsForm />;
+
+      case 'achievements': return <AchievementsForm />;
       default: return null;
     }
   };
@@ -117,6 +133,7 @@ export default function EditorPanel() {
       </div>
 
       <DndContext 
+        id="resume-dnd"
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}

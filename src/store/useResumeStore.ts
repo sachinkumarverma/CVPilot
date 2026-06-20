@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 
-export type ResumeSectionType = 'personal' | 'summary' | 'experience' | 'education' | 'skills';
+export type ResumeSectionType = 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'achievements';
 
 export interface ExperienceItem {
   id: string;
@@ -20,6 +20,25 @@ export interface EducationItem {
   endDate: string;
 }
 
+export interface ProjectItem {
+  id: string;
+  name: string;
+  description: string;
+  link: string;
+}
+
+export interface CertificationItem {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+}
+
+export interface AchievementItem {
+  id: string;
+  description: string;
+}
+
 export interface ResumeData {
   personal: {
     fullName: string;
@@ -32,9 +51,14 @@ export interface ResumeData {
   experience: ExperienceItem[];
   education: EducationItem[];
   skills: string[];
+  projects: ProjectItem[];
+  certifications: CertificationItem[];
+  achievements: AchievementItem[];
 }
 
 interface ResumeState {
+  documentName: string;
+  setDocumentName: (name: string) => void;
   data: ResumeData;
   activeTemplate: string;
   sections: ResumeSectionType[];
@@ -47,6 +71,20 @@ interface ResumeState {
   updateEducation: (id: string, data: Partial<EducationItem>) => void;
   removeEducation: (id: string) => void;
   updateSkills: (skills: string[]) => void;
+  
+  addProject: () => void;
+  updateProject: (id: string, data: Partial<ProjectItem>) => void;
+  removeProject: (id: string) => void;
+
+  addCertification: () => void;
+  updateCertification: (id: string, data: Partial<CertificationItem>) => void;
+  removeCertification: (id: string) => void;
+
+
+  addAchievement: () => void;
+  updateAchievement: (id: string, data: Partial<AchievementItem>) => void;
+  removeAchievement: (id: string) => void;
+
   reorderSections: (newOrder: ResumeSectionType[]) => void;
   setTemplate: (templateId: string) => void;
 }
@@ -63,11 +101,16 @@ const initialData: ResumeData = {
   experience: [],
   education: [],
   skills: [],
+  projects: [],
+  certifications: [],
+  achievements: [],
 };
 
-const defaultSections: ResumeSectionType[] = ['personal', 'summary', 'experience', 'education', 'skills'];
+const defaultSections: ResumeSectionType[] = ['personal', 'summary', 'experience', 'education', 'skills', 'projects', 'certifications', 'achievements'];
 
 export const useResumeStore = create<ResumeState>((set) => ({
+  documentName: 'Untitled Resume',
+  setDocumentName: (name) => set({ documentName: name }),
   data: initialData,
   activeTemplate: 'modern',
   sections: defaultSections,
@@ -135,7 +178,48 @@ export const useResumeStore = create<ResumeState>((set) => ({
   updateSkills: (skills) => 
     set((state) => ({ data: { ...state.data, skills } })),
     
+  addProject: () => 
+    set((state) => ({
+      data: { ...state.data, projects: [...state.data.projects, { id: uuidv4(), name: '', description: '', link: '' }] }
+    })),
+  updateProject: (id, data) => 
+    set((state) => ({
+      data: { ...state.data, projects: state.data.projects.map(p => p.id === id ? { ...p, ...data } : p) }
+    })),
+  removeProject: (id) => 
+    set((state) => ({
+      data: { ...state.data, projects: state.data.projects.filter(p => p.id !== id) }
+    })),
+
+  addCertification: () => 
+    set((state) => ({
+      data: { ...state.data, certifications: [...state.data.certifications, { id: uuidv4(), name: '', issuer: '', date: '' }] }
+    })),
+  updateCertification: (id, data) => 
+    set((state) => ({
+      data: { ...state.data, certifications: state.data.certifications.map(c => c.id === id ? { ...c, ...data } : c) }
+    })),
+  removeCertification: (id) => 
+    set((state) => ({
+      data: { ...state.data, certifications: state.data.certifications.filter(c => c.id !== id) }
+    })),
+
+
+  addAchievement: () => 
+    set((state) => ({
+      data: { ...state.data, achievements: [...state.data.achievements, { id: uuidv4(), description: '' }] }
+    })),
+  updateAchievement: (id, data) => 
+    set((state) => ({
+      data: { ...state.data, achievements: state.data.achievements.map(a => a.id === id ? { ...a, ...data } : a) }
+    })),
+  removeAchievement: (id) => 
+    set((state) => ({
+      data: { ...state.data, achievements: state.data.achievements.filter(a => a.id !== id) }
+    })),
+
   reorderSections: (sections) => set({ sections }),
   
   setTemplate: (activeTemplate) => set({ activeTemplate }),
 }));
+

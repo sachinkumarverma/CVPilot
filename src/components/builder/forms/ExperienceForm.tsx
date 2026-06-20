@@ -37,7 +37,7 @@ export default function ExperienceForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-2">
       {data.experience.map((exp, index) => (
         <div key={exp.id} className="p-4 border border-gray-200 dark:border-white/10 rounded-lg bg-gray-50/50 dark:bg-gray-900/50 relative group">
           <button 
@@ -48,7 +48,7 @@ export default function ExperienceForm() {
           </button>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Job Title</label>
               <input 
                 type="text" 
@@ -58,7 +58,7 @@ export default function ExperienceForm() {
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
               <input 
                 type="text" 
@@ -68,7 +68,7 @@ export default function ExperienceForm() {
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
               <input 
                 type="text" 
@@ -78,7 +78,7 @@ export default function ExperienceForm() {
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">End Date</label>
               <input 
                 type="text" 
@@ -90,7 +90,7 @@ export default function ExperienceForm() {
             </div>
           </div>
           
-          <div className="space-y-1.5">
+          <div className="flex flex-col gap-2">
             <div className="flex justify-between items-center">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
               <button 

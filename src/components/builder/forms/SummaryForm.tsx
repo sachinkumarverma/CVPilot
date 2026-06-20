@@ -36,7 +36,7 @@ export default function SummaryForm() {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
         <p className="text-sm text-gray-500 dark:text-gray-400">Write a brief 2-3 sentence summary of your professional background.</p>
         <button 

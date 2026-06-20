@@ -8,7 +8,7 @@ export default function PersonalForm() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
         <input 
           type="text" 
@@ -19,7 +19,7 @@ export default function PersonalForm() {
         />
       </div>
       
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
         <input 
           type="email" 
@@ -30,7 +30,7 @@ export default function PersonalForm() {
         />
       </div>
       
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
         <input 
           type="tel" 
@@ -41,7 +41,7 @@ export default function PersonalForm() {
         />
       </div>
       
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Location</label>
         <input 
           type="text" 
@@ -52,7 +52,7 @@ export default function PersonalForm() {
         />
       </div>
       
-      <div className="space-y-1.5 sm:col-span-2">
+      <div className="flex flex-col gap-2 sm:col-span-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Website / Portfolio</label>
         <input 
           type="url" 
