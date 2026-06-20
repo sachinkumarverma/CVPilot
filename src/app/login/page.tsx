@@ -7,7 +7,9 @@ import { FileText, Mail, Loader2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 
 function LoginContent() {
-  const [view, setView] = useState<'sign-in' | 'forgot' | 'otp' | 'update-password'>('sign-in');
+  const [view, setView] = useState<'sign-in' | 'sign-up' | 'forgot' | 'otp' | 'update-password'>('sign-in');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -53,13 +55,14 @@ function LoginContent() {
       setError(error.message);
       setIsLoginLoading(false);
     } else {
-      router.push('/builder');
+      router.push('/templates');
     }
   };
 
-  const handleSignUp = async () => {
-    if (!email || !password) {
-      setError('Please provide an email and password to sign up.');
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password || !firstName || !lastName) {
+      setError('Please fill in all fields to sign up.');
       return;
     }
 
@@ -70,15 +73,21 @@ function LoginContent() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+        }
+      }
     });
 
     if (error) {
       setError(error.message);
     } else if (data?.user?.identities && data.user.identities.length === 0) {
-      // Supabase returns an empty identities array if an account with this email already exists
       setError('An account with this email address already exists. Please log in.');
     } else {
       setMessage('Success! Please check your email for the confirmation link.');
+      setView('sign-in');
     }
     setIsSignUpLoading(false);
   };
@@ -180,13 +189,17 @@ function LoginContent() {
           </Link>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
             {view === 'sign-in' && 'Welcome back'}
+            {view === 'sign-up' && 'Create an account'}
             {view === 'forgot' && 'Reset password'}
             {view === 'otp' && 'Enter Code'}
+            {view === 'update-password' && 'Update password'}
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             {view === 'sign-in' && 'Sign in to access your resumes'}
+            {view === 'sign-up' && 'Join us to build your professional resume'}
             {view === 'forgot' && 'We will send you a code to reset your password'}
             {view === 'otp' && 'Check your email for the reset code'}
+            {view === 'update-password' && 'Please enter your new password below'}
           </p>
         </div>
 
@@ -202,13 +215,180 @@ function LoginContent() {
           </div>
         )}
 
-        {view === 'sign-in' && (
+        {(view === 'sign-in' || view === 'sign-up') && (
           <div className="mt-8 space-y-6">
-            <div className="space-y-4">
-              <button
-                onClick={() => handleOAuthLogin('google')}
-                className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
+            {view === 'sign-in' ? (
+              <form className="space-y-4" onSubmit={handleEmailLogin}>
+                <div>
+                  <label htmlFor="email-address" className="sr-only">Email address</label>
+                  <input
+                    id="email-address"
+                    name="email"
+                    type="email"
+                    autoComplete="username"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all"
+                    placeholder="Email address"
+                  />
+                </div>
+                <div className="relative">
+                  <label htmlFor="password" className="sr-only">Password</label>
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all"
+                    placeholder="Password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-700 z-20"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <input
+                      id="remember-me"
+                      name="remember-me"
+                      type="checkbox"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800"
+                    />
+                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                      Remember me
+                    </label>
+                  </div>
+                  <div className="text-sm">
+                    <button type="button" onClick={() => { setView('forgot'); setError(null); setMessage(null); }} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                      Forgot password?
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoginLoading}
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all"
+                >
+                  {isLoginLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign in'}
+                </button>
+                
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                  Don't have an account?{' '}
+                  <button type="button" onClick={() => { setView('sign-up'); setError(null); setMessage(null); setEmail(''); setPassword(''); }} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                    Sign up
+                  </button>
+                </p>
+              </form>
+            ) : (
+              <form className="space-y-4" onSubmit={handleSignUp}>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="first-name" className="sr-only">First name</label>
+                    <input
+                      id="first-name"
+                      name="firstName"
+                      autoComplete="given-name"
+                      type="text"
+                      required
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
+                      placeholder="First Name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="last-name" className="sr-only">Last name</label>
+                    <input
+                      id="last-name"
+                      name="lastName"
+                      autoComplete="family-name"
+                      type="text"
+                      required
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
+                      placeholder="Last Name"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="signup-email" className="sr-only">Email address</label>
+                  <input
+                    id="signup-email"
+                    name="email"
+                    autoComplete="username"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
+                    placeholder="Email address"
+                  />
+                </div>
+                <div className="relative">
+                  <label htmlFor="signup-password" className="sr-only">Password</label>
+                  <input
+                    id="signup-password"
+                    name="password"
+                    autoComplete="new-password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
+                    placeholder="Password (min 6 characters)"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-700 z-20"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSignUpLoading}
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all"
+                >
+                  {isSignUpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign up'}
+                </button>
+                
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                  Already have an account?{' '}
+                  <button type="button" onClick={() => { setView('sign-in'); setError(null); setMessage(null); setEmail(''); setPassword(''); }} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+                    Log in
+                  </button>
+                </p>
+              </form>
+            )}
+
+            <div className="relative pt-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200 dark:border-gray-700" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <button onClick={() => handleOAuthLogin('google')} className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -217,114 +397,19 @@ function LoginContent() {
                 </svg>
                 <span>Continue with Google</span>
               </button>
-              <button
-                onClick={() => handleOAuthLogin('github')}
-                className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
+              <button onClick={() => handleOAuthLogin('github')} className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <svg className="w-5 h-5 text-gray-900 dark:text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd"/>
                 </svg>
                 <span>Continue with GitHub</span>
               </button>
-              <button
-                onClick={() => handleOAuthLogin('gitlab')}
-                className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
+              <button onClick={() => handleOAuthLogin('gitlab')} className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <svg className="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 5.11 2h.08a.42.42 0 0 1 .4.28l2.44 7.51h8.18l2.44-7.51A.42.42 0 0 1 19 2h.08a.42.42 0 0 1 .4.28l2.44 7.51 1.22 3.78a.84.84 0 0 1-.3.94z"/>
                 </svg>
                 <span>Continue with GitLab</span>
               </button>
             </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-700" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">Or continue with email</span>
-              </div>
-            </div>
-
-            <form className="space-y-4" onSubmit={handleEmailLogin}>
-              <div>
-                <label htmlFor="email-address" className="sr-only">Email address</label>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all"
-                  placeholder="Email address"
-                />
-              </div>
-              <div className="relative">
-                <label htmlFor="password" className="sr-only">Password</label>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-all"
-                  placeholder="Password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 z-20"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <Eye className="h-5 w-5" aria-hidden="true" />
-                  )}
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800"
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                    Remember me
-                  </label>
-                </div>
-
-                <div className="text-sm">
-                  <button type="button" onClick={() => { setView('forgot'); setError(null); setMessage(null); }} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
-                    Forgot password?
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex space-x-3 pt-2">
-                <button
-                  type="button"
-                  onClick={handleSignUp}
-                  disabled={isSignUpLoading || isLoginLoading}
-                  className="w-1/2 flex justify-center py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all disabled:opacity-50"
-                >
-                  {isSignUpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign up'}
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoginLoading || isSignUpLoading}
-                  className="w-1/2 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all"
-                >
-                  {isLoginLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign in'}
-                </button>
-              </div>
-            </form>
           </div>
         )}
 
@@ -406,7 +491,7 @@ function LoginContent() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 z-20"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-700 z-20"
               >
                 {showPassword ? (
                   <EyeOff className="h-5 w-5" aria-hidden="true" />

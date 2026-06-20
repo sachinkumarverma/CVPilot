@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Sparkles, CheckCircle, FileText, ArrowRight } from 'lucide-react';
+import { Sparkles, CheckCircle, FileText, ArrowRight, Mail, MapPin, Globe, User, Briefcase, Award } from 'lucide-react';
 
 export default function Home() {
   const containerVariants = {
@@ -31,11 +31,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-blue-100 to-transparent dark:from-blue-900/30" />
       </div>
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 relative z-10 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 relative z-10 w-full">
         
         {/* Hero Section */}
         <motion.div 
-          className="text-center mt-12 md:mt-24 max-w-4xl mx-auto"
+          className="text-center mt-8 md:mt-12 max-w-4xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -86,38 +86,167 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-black via-transparent to-transparent z-10 bottom-0 h-32" />
           <div className="rounded-2xl border border-gray-200 dark:border-white/10 shadow-2xl overflow-hidden bg-white dark:bg-gray-900">
             <div className="h-12 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-white/10 flex items-center px-4 space-x-2">
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
               <div className="w-3 h-3 rounded-full bg-green-500" />
             </div>
-            <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8 h-[400px]">
-              <div className="col-span-1 space-y-4">
-                <div className="h-8 bg-gray-100 dark:bg-gray-800 rounded-md w-3/4" />
-                <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-full" />
-                <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-full" />
-                <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-5/6" />
-                
-                <div className="pt-6">
-                  <div className="h-6 bg-gray-100 dark:bg-gray-800 rounded-md w-1/2 mb-4" />
-                  <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-full mb-2" />
-                  <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-full mb-2" />
-                </div>
-              </div>
-              <div className="col-span-2 space-y-6">
-                <div>
-                  <div className="h-8 bg-blue-50 dark:bg-blue-900/30 rounded-md w-1/3 mb-4" />
-                  <div className="h-24 bg-gray-50 dark:bg-gray-800 rounded-lg w-full border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center">
-                     <span className="text-gray-400 dark:text-gray-500 text-sm flex items-center"><Sparkles className="w-4 h-4 mr-2"/> AI generating summary...</span>
+            
+            {/* The Resume Preview */}
+            <div className="h-[500px] overflow-y-auto bg-white text-gray-900 font-sans selection:bg-blue-100 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+              <div className="flex flex-col md:flex-row w-full min-h-full bg-white">
+                {/* Left Column (Sidebar) */}
+                <div className="w-full md:w-1/3 bg-[#232E35] text-white p-8 md:p-10 flex flex-col space-y-8">
+                  <div className="flex justify-center">
+                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white/10 shadow-lg">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=300" alt="Sarah Jenkins" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-extrabold text-white tracking-tight text-center">Sarah<br/>Jenkins</h2>
+                    <p className="text-blue-400 font-semibold text-sm mt-2 tracking-wide text-center uppercase">Senior Full Stack</p>
+                  </div>
+                  
+                  <div className="space-y-3 text-sm text-gray-300 font-medium">
+                    <div className="flex items-center"><Mail className="w-4 h-4 mr-3 text-gray-400"/> sarah.j@example.com</div>
+                    <div className="flex items-center"><MapPin className="w-4 h-4 mr-3 text-gray-400"/> San Francisco, CA</div>
+                    <div className="flex items-center"><Globe className="w-4 h-4 mr-3 text-gray-400"/> sarahjenkins.dev</div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-600 pb-2 mb-4">Skills</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {['React', 'TypeScript', 'Node.js', 'Python', 'AWS', 'Docker', 'GraphQL'].map(skill => (
+                        <span key={skill} className="px-2.5 py-1 bg-white/10 border border-white/5 text-white text-xs font-semibold rounded-md shadow-sm">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-600 pb-2 mb-4">Education</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="font-bold text-white text-sm">M.S. Software Engineering</p>
+                        <p className="text-gray-400 text-xs font-medium mt-1">UC Berkeley, 2016-2018</p>
+                      </div>
+                      <div>
+                        <p className="font-bold text-white text-sm">B.S. Computer Science</p>
+                        <p className="text-gray-400 text-xs font-medium mt-1">Stanford University, 2012-2016</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-600 pb-2 mb-4">Languages</h3>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="font-semibold text-gray-200">English</span>
+                        <span className="text-xs text-gray-400 font-medium">Native</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="font-semibold text-gray-200">Spanish</span>
+                        <span className="text-xs text-gray-400 font-medium">Professional</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-600 pb-2 mb-4">Certifications</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="font-bold text-white text-sm">AWS Certified Solutions Architect</p>
+                        <p className="text-gray-400 text-xs font-medium mt-1">Amazon Web Services, 2021</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div className="h-6 bg-gray-100 dark:bg-gray-800 rounded-md w-1/4 mb-4" />
-                  <div className="space-y-3">
-                    <div className="h-16 bg-gray-100 dark:bg-gray-800 rounded-md w-full" />
-                    <div className="h-16 bg-gray-100 dark:bg-gray-800 rounded-md w-full" />
+
+                {/* Right Column (Main Content) */}
+                <div className="w-full md:w-2/3 p-8 md:p-12 flex flex-col space-y-8 bg-white">
+                  <div>
+                    <h3 className="text-xs font-bold text-blue-600 uppercase tracking-widest border-b border-gray-200 pb-2 mb-4 flex items-center">
+                      <User className="w-4 h-4 mr-2"/> Professional Summary
+                    </h3>
+                    <p className="text-gray-700 text-sm leading-relaxed font-medium">
+                      Results-driven Senior Software Engineer with 8+ years of experience in designing, developing, and scaling high-performance web applications. Adept at leading cross-functional teams and implementing modern cloud architectures to deliver scalable product solutions.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xs font-bold text-blue-600 uppercase tracking-widest border-b border-gray-200 pb-2 mb-4 flex items-center">
+                      <Briefcase className="w-4 h-4 mr-2"/> Work Experience
+                    </h3>
+                    
+                    <div className="space-y-6">
+                      {/* Job 1 */}
+                      <div>
+                        <div className="flex justify-between items-baseline mb-2">
+                          <h4 className="font-bold text-gray-900 text-base">Tech Lead <span className="text-gray-500 font-medium">at InnovateCorp</span></h4>
+                          <span className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded-md">2020 - Present</span>
+                        </div>
+                        <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
+                          <li>Spearheaded the migration of legacy monolithic architecture to a scalable microservices ecosystem, improving system uptime to 99.99%.</li>
+                          <li>Mentored a team of 12 engineers, fostering a culture of continuous integration and agile methodologies.</li>
+                        </ul>
+                      </div>
+                      
+                      {/* Job 2 */}
+                      <div>
+                        <div className="flex justify-between items-baseline mb-2">
+                          <h4 className="font-bold text-gray-900 text-base">Software Engineer <span className="text-gray-500 font-medium">at CloudSync</span></h4>
+                          <span className="text-xs text-gray-500 font-bold bg-gray-50 px-2 py-1 rounded-md border border-gray-100">2016 - 2020</span>
+                        </div>
+                        <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
+                          <li>Developed and deployed real-time data processing pipelines using Apache Kafka and Node.js.</li>
+                          <li>Reduced page load times by 40% through extensive frontend optimizations and implementation of SSR in Next.js.</li>
+                        </ul>
+                      </div>
+                      
+                      {/* Job 3 */}
+                      <div>
+                        <div className="flex justify-between items-baseline mb-2">
+                          <h4 className="font-bold text-gray-900 text-base">Junior Web Developer <span className="text-gray-500 font-medium">at StartUp Inc</span></h4>
+                          <span className="text-xs text-gray-500 font-bold bg-gray-50 px-2 py-1 rounded-md border border-gray-100">2014 - 2016</span>
+                        </div>
+                        <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
+                          <li>Built responsive, mobile-first landing pages increasing conversion rates by 25%.</li>
+                          <li>Collaborated with the design team to implement pixel-perfect user interfaces in React.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Projects Section */}
+                  <div>
+                    <h3 className="text-xs font-bold text-blue-600 uppercase tracking-widest border-b border-gray-200 pb-2 mb-4 flex items-center">
+                      <FileText className="w-4 h-4 mr-2"/> Key Projects
+                    </h3>
+                    
+                    <div className="space-y-5">
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-sm mb-1">E-Commerce Analytics Dashboard</h4>
+                        <p className="text-sm text-gray-600 font-medium leading-relaxed">Designed and built a comprehensive analytics dashboard for sellers using Next.js, Tailwind CSS, and Recharts, processing over 1M data points daily.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-sm mb-1">Open Source Contribution: React-Router</h4>
+                        <p className="text-sm text-gray-600 font-medium leading-relaxed">Contributed core bug fixes and performance improvements to the routing algorithm, directly impacting over 5M+ weekly downloads.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Accomplishments Section */}
+                  <div>
+                    <h3 className="text-xs font-bold text-blue-600 uppercase tracking-widest border-b border-gray-200 pb-2 mb-4 flex items-center">
+                      <Award className="w-4 h-4 mr-2"/> Accomplishments
+                    </h3>
+                    <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
+                      <li>Awarded "Engineer of the Year" out of 150+ employees at InnovateCorp in 2022.</li>
+                      <li>First place winner at the global TechCrunch Disrupt Hackathon in 2019.</li>
+                    </ul>
                   </div>
                 </div>
               </div>

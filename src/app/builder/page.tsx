@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import EditorPanel from '@/components/builder/EditorPanel';
 import PreviewPanel from '@/components/builder/PreviewPanel';
 import { useResumeStore } from '@/store/useResumeStore';
-import { Download, Sparkles, Layout, X, Check } from 'lucide-react';
+import { Download, Sparkles, Layout, X, Check, ArrowLeft } from 'lucide-react';
 
 export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
   const { activeTemplate, setTemplate } = useResumeStore();
+  const router = useRouter();
   
   const handleTemplateSelect = (templateId: string) => {
     setTemplate(templateId);
@@ -21,6 +23,9 @@ export default function BuilderPage() {
       {/* Builder Toolbar */}
       <div className="flex-none h-14 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-white/10 flex items-center justify-between px-4 sm:px-6 shadow-sm z-10 print:hidden">
         <div className="flex items-center space-x-4">
+          <button onClick={() => router.back()} className="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
           <h1 className="font-semibold text-gray-900 dark:text-white hidden sm:block">Untitled Resume</h1>
           <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
             <button 

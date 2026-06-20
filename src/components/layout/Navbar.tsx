@@ -74,7 +74,7 @@ export default function Navbar() {
             </div>
             
             <div className="flex space-x-4 items-center pl-4 border-l border-gray-200 dark:border-gray-700 relative">
-              <Link href="/builder" className="text-sm font-medium bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 transition-colors shadow-sm">
+              <Link href="/builder" className="text-sm font-medium bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 transition-colors shadow-sm">
                 Build Resume
               </Link>
 
@@ -93,9 +93,14 @@ export default function Navbar() {
 
                   {/* Dropdown Menu */}
                   {isProfileMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 py-1 z-50">
+                    <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 py-1 z-50">
                       <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                          {user.user_metadata?.first_name || user.user_metadata?.last_name
+                            ? `${user.user_metadata.first_name || ''} ${user.user_metadata.last_name || ''}`.trim()
+                            : user.user_metadata?.full_name || user.user_metadata?.name || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
                           {user.email}
                         </p>
                       </div>
@@ -110,8 +115,8 @@ export default function Navbar() {
                   )}
                 </div>
               ) : (
-                <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors ml-4">
-                  Log in
+                <Link href="/login" className="text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors shadow-sm">
+                  Login
                 </Link>
               )}
             </div>
@@ -138,14 +143,14 @@ export default function Navbar() {
             {user ? (
                <button 
                  onClick={handleSignOut}
-                 className="block w-full text-center px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 border border-gray-200 dark:border-white/10 rounded-full hover:bg-red-50 dark:hover:bg-red-900/10"
+                 className="block w-full text-center px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 border border-gray-200 dark:border-white/10 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
                >
                  Sign Out
                </button>
             ) : (
-              <Link href="/login" className="block w-full text-center px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10 rounded-full hover:bg-gray-50 dark:hover:bg-gray-900">Log in</Link>
+              <Link href="/login" className="block w-full text-center px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">Login</Link>
             )}
-            <Link href="/builder" className="block w-full text-center px-4 py-2 text-sm font-medium bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-full hover:bg-gray-800 dark:hover:bg-gray-200">Build Resume</Link>
+            <Link href="/builder" className="block w-full text-center px-4 py-2 text-sm font-medium bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200">Build Resume</Link>
           </div>
         </div>
       )}
