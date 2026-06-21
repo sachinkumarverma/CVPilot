@@ -37,7 +37,7 @@ export default function AIAssistantModal({ onClose }: { onClose: () => void }) {
       if (generated.skills) updateSkills(generated.skills);
       
       if (generated.experience && generated.experience.length > 0) {
-        generated.experience.forEach((exp: any) => {
+        generated.experience.forEach((exp: Record<string, string>) => {
           const id = uuidv4();
           addExperience();
           setTimeout(() => {
@@ -53,7 +53,7 @@ export default function AIAssistantModal({ onClose }: { onClose: () => void }) {
       }
       
       if (generated.projects && generated.projects.length > 0) {
-        generated.projects.forEach((proj: any) => {
+        generated.projects.forEach((proj: Record<string, string>) => {
           const id = uuidv4();
           addProject();
           setTimeout(() => {
@@ -133,7 +133,7 @@ export default function AIAssistantModal({ onClose }: { onClose: () => void }) {
           {tab === 'generate' && (
             <div className="space-y-5">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Let AI build a foundational resume for you. Enter your role and skills, and we'll generate an ATS-optimized summary, experience bullet points, and project descriptions.
+                Let AI build a foundational resume for you. Enter your role and skills, and we&apos;ll generate an ATS-optimized summary, experience bullet points, and project descriptions.
               </p>
               
               <div className="space-y-4">

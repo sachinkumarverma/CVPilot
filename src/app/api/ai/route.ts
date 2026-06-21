@@ -121,7 +121,7 @@ Return JSON strictly in this format:
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('AI API Error:', error);
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }

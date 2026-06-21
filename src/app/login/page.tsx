@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { FileText, Mail, Loader2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { FileText, Loader2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 
 function LoginContent() {
@@ -287,7 +287,7 @@ function LoginContent() {
                 </button>
                 
                 <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
-                  Don't have an account?{' '}
+                  Don&apos;t have an account?{' '}
                   <button type="button" onClick={() => { setView('sign-up'); setError(null); setMessage(null); setEmail(''); setPassword(''); }} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
                     Sign up
                   </button>

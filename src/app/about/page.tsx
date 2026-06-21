@@ -13,13 +13,13 @@ export default function AboutPage() {
         <div className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">About CVPilot</h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-            We're on a mission to democratize career growth by providing an intelligent, beautifully designed, and accessible resume builder.
+            We&apos;re on a mission to democratize career growth by providing an intelligent, beautifully designed, and accessible resume builder.
           </p>
         </div>
 
         <div className="space-y-6 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
           <p>
-            Building a modern, Applicant Tracking System (ATS) friendly resume shouldn't require an advanced degree in design or hours of frustration formatting tables in a word processor. 
+            Building a modern, Applicant Tracking System (ATS) friendly resume shouldn&apos;t require an advanced degree in design or hours of frustration formatting tables in a word processor. 
             CVPilot was created to solve this problem.
           </p>
           <p>

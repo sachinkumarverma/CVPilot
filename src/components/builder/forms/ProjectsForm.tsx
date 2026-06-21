@@ -8,7 +8,7 @@ export default function ProjectsForm() {
 
   return (
     <div className="flex flex-col gap-2">
-      {data.projects.map((proj, index) => (
+      {data.projects.map((proj) => (
         <div key={proj.id} className="p-4 border border-gray-200 dark:border-white/10 rounded-lg bg-gray-50/50 dark:bg-gray-900/50 relative group">
           <button 
             onClick={() => removeProject(proj.id)}

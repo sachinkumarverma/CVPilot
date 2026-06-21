@@ -1,5 +1,5 @@
 import { ResumeData } from '@/store/useResumeStore';
-import { Mail, Phone, MapPin, Globe, User, Briefcase, Award, GraduationCap, FileText } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, User, Briefcase, Award, FileText } from 'lucide-react';
 
 interface ModernTemplateProps {
   data: ResumeData;
@@ -129,7 +129,7 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
             </h3>
 
             <div className="space-y-4">
-              {experience.map((exp, idx) => (
+              {experience.map((exp) => (
                 <div key={exp.id} className="break-inside-avoid">
                   <div className="flex justify-between items-start mb-1.5">
                     <div className="flex flex-col">

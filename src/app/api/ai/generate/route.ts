@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ content });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Local Generation Error:', error);
     return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });
   }

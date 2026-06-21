@@ -46,7 +46,7 @@ export default function ExperienceForm() {
 
   return (
     <div className="flex flex-col gap-2">
-      {data.experience.map((exp, index) => (
+      {data.experience.map((exp) => (
         <div key={exp.id} className="p-4 border border-gray-200 dark:border-white/10 rounded-lg bg-gray-50/50 dark:bg-gray-900/50 relative group">
           <button 
             onClick={() => removeExperience(exp.id)}

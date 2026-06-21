@@ -1,5 +1,4 @@
 'use client';
-
 import { useResumeStore } from '@/store/useResumeStore';
 import { 
   DndContext, 

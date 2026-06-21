@@ -8,7 +8,7 @@ export default function CertificationsForm() {
 
   return (
     <div className="flex flex-col gap-2">
-      {data.certifications.map((cert, index) => (
+      {data.certifications.map((cert) => (
         <div key={cert.id} className="p-4 border border-gray-200 dark:border-white/10 rounded-lg bg-gray-50/50 dark:bg-gray-900/50 relative group">
           <button 
             onClick={() => removeCertification(cert.id)}

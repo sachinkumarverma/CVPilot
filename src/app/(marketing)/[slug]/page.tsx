@@ -21,7 +21,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ slug
             </p>
             <h3 className="text-2xl font-bold mt-8 mb-4 text-gray-900 dark:text-white">ATS-Optimized Templates</h3>
             <p className="mb-4 text-gray-600 dark:text-gray-300">
-              Beautiful design shouldn't come at the cost of readability. Every template in our library has been rigorously tested against industry-leading Applicant Tracking Systems (like Workday, Taleo, and Greenhouse) to ensure 100% parseability. Your data will never get lost in translation.
+              Beautiful design shouldn&apos;t come at the cost of readability. Every template in our library has been rigorously tested against industry-leading Applicant Tracking Systems (like Workday, Taleo, and Greenhouse) to ensure 100% parseability. Your data will never get lost in translation.
             </p>
             <h3 className="text-2xl font-bold mt-8 mb-4 text-gray-900 dark:text-white">Real-Time Preview</h3>
             <p className="mb-4 text-gray-600 dark:text-gray-300">
@@ -81,7 +81,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ slug
             </p>
             <h3 className="text-xl font-bold mt-8 mb-4 text-gray-900 dark:text-white">3. Third-Party Services</h3>
             <p className="mb-4 text-gray-600 dark:text-gray-300">
-              We utilize Google's Gemini API to power our AI features and Supabase for secure authentication. By using CVPilot, you acknowledge that your data may be processed by these sub-processors in accordance with their respective privacy policies.
+              We utilize Google&apos;s Gemini API to power our AI features and Supabase for secure authentication. By using CVPilot, you acknowledge that your data may be processed by these sub-processors in accordance with their respective privacy policies.
             </p>
           </>
         );

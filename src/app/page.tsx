@@ -20,7 +20,7 @@ export default function Home() {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.5, ease: "easeOut" as any }
+      transition: { duration: 0.5, ease: "easeOut" as const }
     }
   };
 
@@ -251,7 +251,7 @@ export default function Home() {
                       <Award className="w-4 h-4 mr-2"/> Accomplishments
                     </h3>
                     <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-2 font-medium">
-                      <li>Awarded "Engineer of the Year" out of 150+ employees at InnovateCorp in 2022.</li>
+                      <li>Awarded &quot;Engineer of the Year&quot; out of 150+ employees at InnovateCorp in 2022.</li>
                       <li>First place winner at the global TechCrunch Disrupt Hackathon in 2019.</li>
                     </ul>
                   </div>
@@ -293,7 +293,7 @@ export default function Home() {
                 <CheckCircle className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Real-time Score</h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">Get instant feedback on your resume's strength and identify missing keywords based on job descriptions.</p>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">Get instant feedback on your resume&apos;s strength and identify missing keywords based on job descriptions.</p>
             </div>
           </div>
         </div>

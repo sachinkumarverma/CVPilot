@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FileText, ArrowLeft, Star, Clock, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Star, CheckCircle } from 'lucide-react';
 import { useResumeStore } from '@/store/useResumeStore';
 
 const templates = [
