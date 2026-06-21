@@ -1,5 +1,5 @@
 'use client';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore, ResumeSectionType } from '@/store/useResumeStore';
 import { 
   DndContext, 
   closestCenter,
@@ -7,6 +7,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -114,12 +115,12 @@ export default function EditorPanel() {
     })
   );
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      const oldIndex = sections.indexOf(active.id);
-      const newIndex = sections.indexOf(over.id);
+    if (over && active.id !== over.id) {
+      const oldIndex = sections.indexOf(active.id as ResumeSectionType);
+      const newIndex = sections.indexOf(over.id as ResumeSectionType);
       reorderSections(arrayMove(sections, oldIndex, newIndex));
     }
   };

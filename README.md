@@ -18,10 +18,13 @@
 ## 🛠️ Tech Stack
 
 - **Frontend:** [Next.js](https://nextjs.org/) (App Router), React, TypeScript
+- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/)
+- **Drag & Drop:** [@dnd-kit](https://docs.dndkit.com/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Animations:** [Framer Motion](https://www.framer.com/motion/)
 - **Icons:** [Lucide React](https://lucide.dev/)
 - **Backend & Auth:** [Supabase](https://supabase.com/)
+- **AI Integration:** [Groq API](https://groq.com/) (LLaMA 3.1)
 
 ---
 
@@ -57,6 +60,7 @@ Create a `.env.local` file in the root directory and add your Supabase credentia
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+GROQ_API_KEY=your_groq_api_key
 ```
 
 ### 4. Run the Development Server
