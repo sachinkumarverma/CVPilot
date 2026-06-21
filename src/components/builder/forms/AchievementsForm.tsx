@@ -23,11 +23,16 @@ export default function AchievementsForm() {
       });
       
       const result = await res.json();
+      if (result.error) {
+        alert("AI Error: " + result.error);
+        return;
+      }
       if (result.result) {
         updateAchievement(id, { description: result.result });
       }
     } catch (error) {
-      console.error("Failed to generate achievement", error);
+      console.error("Failed to enhance achievement", error);
+      alert("Failed to connect to AI service.");
     } finally {
       setGeneratingId(null);
     }
@@ -50,7 +55,8 @@ export default function AchievementsForm() {
               <button 
                 onClick={() => handleGenerate(ach.id, ach.description)}
                 disabled={generatingId === ach.id || !ach.description}
-                className="flex items-center space-x-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded disabled:opacity-50"
+                title={!ach.description ? "Please enter an achievement description first" : "Enhance with AI"}
+                className="flex items-center space-x-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {generatingId === ach.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
                 <span>{generatingId === ach.id ? 'Enhancing...' : 'AI Enhance'}</span>

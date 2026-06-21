@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 
 export type ResumeSectionType = 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'achievements';
@@ -18,6 +19,7 @@ export interface EducationItem {
   degree: string;
   startDate: string;
   endDate: string;
+  score?: string;
 }
 
 export interface ProjectItem {
@@ -25,6 +27,7 @@ export interface ProjectItem {
   name: string;
   description: string;
   link: string;
+  technologies?: string;
 }
 
 export interface CertificationItem {
@@ -46,6 +49,7 @@ export interface ResumeData {
     phone: string;
     location: string;
     website: string;
+    photoUrl?: string;
   };
   summary: string;
   experience: ExperienceItem[];
@@ -96,6 +100,7 @@ const initialData: ResumeData = {
     phone: '',
     location: '',
     website: '',
+    photoUrl: '',
   },
   summary: '',
   experience: [],
@@ -108,12 +113,14 @@ const initialData: ResumeData = {
 
 const defaultSections: ResumeSectionType[] = ['personal', 'summary', 'experience', 'education', 'skills', 'projects', 'certifications', 'achievements'];
 
-export const useResumeStore = create<ResumeState>((set) => ({
-  documentName: 'Untitled Resume',
-  setDocumentName: (name) => set({ documentName: name }),
-  data: initialData,
-  activeTemplate: 'modern',
-  sections: defaultSections,
+export const useResumeStore = create<ResumeState>()(
+  persist(
+    (set) => ({
+      documentName: 'Untitled Resume',
+      setDocumentName: (name) => set({ documentName: name }),
+      data: initialData,
+      activeTemplate: 'modern',
+      sections: defaultSections,
   
   updatePersonal: (personalData) => 
     set((state) => ({ data: { ...state.data, personal: { ...state.data.personal, ...personalData } } })),
@@ -221,5 +228,9 @@ export const useResumeStore = create<ResumeState>((set) => ({
   reorderSections: (sections) => set({ sections }),
   
   setTemplate: (activeTemplate) => set({ activeTemplate }),
-}));
-
+    }),
+    {
+      name: 'resume-storage', // key for localStorage
+    }
+  )
+);

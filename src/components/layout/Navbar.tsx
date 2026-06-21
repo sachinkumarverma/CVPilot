@@ -78,6 +78,9 @@ export default function Navbar() {
             </div>
 
             <div className="flex space-x-4 items-center pl-4 border-l border-gray-200 dark:border-gray-700 relative">
+              <a href="https://skillnora.vercel.app/" target="_blank" rel="noreferrer" className="text-sm font-bold bg-amber-400 text-amber-950 px-4 py-2 rounded-lg hover:bg-amber-500 transition-all shadow-sm flex items-center transform hover:-translate-y-0.5">
+                <span className="mr-1">🎓</span> Learn to Code
+              </a>
               <Link href="/builder" className="text-sm font-medium bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 transition-colors shadow-sm">
                 Build Resume
               </Link>
@@ -140,6 +143,9 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white dark:bg-black border-b border-gray-200/50 dark:border-white/10 px-4 pt-2 pb-4 space-y-1">
+          <a href="https://skillnora.vercel.app/" target="_blank" rel="noreferrer" className="block px-3 py-2 text-base font-bold text-amber-600 dark:text-amber-500 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/30">
+            🎓 Learn to Code
+          </a>
           <Link href="/features" className="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900">Features</Link>
           <Link href="/templates" className="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900">Templates</Link>
           <Link href="/pricing" className="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900">Pricing</Link>

@@ -39,6 +39,7 @@ export default function Footer() {
                 <li><Link href="/templates" className="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">Templates</Link></li>
                 <li><Link href="/pricing" className="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">Pricing</Link></li>
                 <li><Link href="/builder" className="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">Resume Builder</Link></li>
+                <li><a href="https://skillnora.vercel.app/" target="_blank" rel="noreferrer" className="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">E-learning Platform</a></li>
               </ul>
             </div>
 

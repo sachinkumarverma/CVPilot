@@ -9,7 +9,7 @@ export default function ExperienceForm() {
   const [generatingId, setGeneratingId] = useState<string | null>(null);
 
   const handleGenerate = async (id: string, position: string, company: string, currentDesc: string) => {
-    if (!position) return;
+    if (!position && !currentDesc) return;
 
     const context = `
       Job Title: ${position}
@@ -29,11 +29,16 @@ export default function ExperienceForm() {
       });
       
       const result = await res.json();
+      if (result.error) {
+        alert("AI Error: " + result.error);
+        return;
+      }
       if (result.result) {
         updateExperience(id, { description: result.result });
       }
     } catch (error) {
       console.error("Failed to generate experience bullet points", error);
+      alert("Failed to connect to AI service.");
     } finally {
       setGeneratingId(null);
     }
@@ -98,8 +103,9 @@ export default function ExperienceForm() {
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
               <button 
                 onClick={() => handleGenerate(exp.id, exp.position, exp.company, exp.description)}
-                disabled={generatingId === exp.id || !exp.position}
-                className="flex items-center space-x-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded disabled:opacity-50"
+                disabled={generatingId === exp.id || (!exp.position && !exp.description)}
+                title={(!exp.position && !exp.description) ? "Please enter a Job Title or Description first" : "Enhance with AI"}
+                className="flex items-center space-x-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {generatingId === exp.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
                 <span>{generatingId === exp.id ? 'Writing...' : 'AI Enhance'}</span>

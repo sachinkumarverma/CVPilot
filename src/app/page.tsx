@@ -62,6 +62,13 @@ export default function Home() {
               <span>View Templates</span>
             </Link>
           </motion.div>
+
+          <motion.div variants={itemVariants} className="mt-8 flex justify-center">
+            <a href="https://skillnora.vercel.app/" target="_blank" rel="noreferrer" className="inline-flex items-center space-x-2 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/50 text-amber-800 dark:text-amber-300 px-6 py-3 rounded-xl font-medium text-sm hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors">
+              <span>🎓 Want to build a career in Tech? Learn coding with Skillnora</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </motion.div>
           
           <motion.div variants={itemVariants} className="mt-10 flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400 font-medium">
             <div className="flex items-center">

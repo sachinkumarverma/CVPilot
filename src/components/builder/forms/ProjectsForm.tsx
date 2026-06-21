@@ -50,6 +50,17 @@ export default function ProjectsForm() {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none resize-y"
             />
           </div>
+          
+          <div className="flex flex-col gap-2 mt-4">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Technologies Used</label>
+            <input 
+              type="text" 
+              value={proj.technologies || ''}
+              onChange={(e) => updateProject(proj.id, { technologies: e.target.value })}
+              placeholder="e.g. React, Node.js, MongoDB"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
         </div>
       ))}
       

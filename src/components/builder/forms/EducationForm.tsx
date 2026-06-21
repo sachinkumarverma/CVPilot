@@ -58,6 +58,16 @@ export default function EducationForm() {
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
+            <div className="flex flex-col gap-2 sm:col-span-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Score / CGPA / %</label>
+              <input 
+                type="text" 
+                value={edu.score || ''}
+                onChange={(e) => updateEducation(edu.id, { score: e.target.value })}
+                placeholder="e.g. 3.8/4.0 or 92%"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
           </div>
         </div>
       ))}
