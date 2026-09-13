@@ -14,6 +14,7 @@ jobs:
         # This counts as an API request and will keep your project active.
         # Make sure to add SUPABASE_URL and SUPABASE_ANON_KEY to your GitHub repository secrets.
         run: |
-          curl -s "${{ secrets.SUPABASE_URL }}/auth/v1/health" \
+          curl -s -f "${{ secrets.SUPABASE_URL }}/rest/v1/" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+
