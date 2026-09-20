@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 // We'll use a fast, reliable model on Groq that supports JSON
-const MODEL = 'llama-3.1-8b-instant';
+const MODEL = 'openai/gpt-oss-20b';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,14 +15,13 @@ export async function POST(req: NextRequest) {
     const { action, payload } = body;
 
     if (!process.env.GROQ_API_KEY) {
-      return NextResponse.json({ 
-        error: 'Groq API key is missing. Please add GROQ_API_KEY to your .env.local file. Get a free one at console.groq.com' 
+      return NextResponse.json({
+        error: 'Groq API key is missing. Please add GROQ_API_KEY to your .env.local file. Get a free one at console.groq.com'
       }, { status: 500 });
     }
 
     if (action === 'generate_resume') {
       const { jobTitle, experienceLevel, skills } = payload;
-      
       const response = await groq.chat.completions.create({
         model: MODEL,
         response_format: { type: 'json_object' },
@@ -64,9 +63,9 @@ Return JSON strictly in this format:
 
     if (action === 'enhance_bullet') {
       const { text, type } = payload;
-      
+
       let systemPrompt = 'You are an expert resume writer. Enhance the provided text to be professional, impactful, and action-oriented. Output ONLY the enhanced text without any quotes or explanations.';
-      
+
       if (type === 'experience') {
         systemPrompt = 'You are an expert resume writer. The user will provide their job title, company, and raw notes/descriptions. Extract and enhance ONLY the description into professional, impactful, and action-oriented bullet points (each starting with a strong action verb). Always try to improve the vocabulary and impact, even if the original text looks good. Output ONLY the final bullet points. DO NOT output the job title, company name, or headers.';
       } else if (type === 'achievement') {
@@ -93,7 +92,6 @@ Return JSON strictly in this format:
 
     if (action === 'score_resume') {
       const { resumeData } = payload;
-      
       const response = await groq.chat.completions.create({
         model: MODEL,
         response_format: { type: 'json_object' },

@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
+import { useToastStore } from '@/store/useToastStore';
 import { Plus, Trash2, Sparkles, Loader2 } from 'lucide-react';
 
 export default function AchievementsForm() {
   const { data, addAchievement, updateAchievement, removeAchievement } = useResumeStore();
+  const { showErrorModal } = useToastStore();
   const [generatingId, setGeneratingId] = useState<string | null>(null);
 
   const handleGenerate = async (id: string, text: string) => {
@@ -24,7 +26,7 @@ export default function AchievementsForm() {
       
       const result = await res.json();
       if (result.error) {
-        alert("AI Error: " + result.error);
+        showErrorModal("AI Service Error", result.error);
         return;
       }
       if (result.result) {
@@ -32,7 +34,7 @@ export default function AchievementsForm() {
       }
     } catch (error) {
       console.error("Failed to enhance achievement", error);
-      alert("Failed to connect to AI service.");
+      showErrorModal("Connection Error", "Failed to connect to AI service. Please check your network or try again.");
     } finally {
       setGeneratingId(null);
     }

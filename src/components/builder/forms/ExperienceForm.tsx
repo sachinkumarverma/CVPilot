@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
+import { useToastStore } from '@/store/useToastStore';
 import { Plus, Trash2, Sparkles, Loader2 } from 'lucide-react';
 
 export default function ExperienceForm() {
   const { data, addExperience, updateExperience, removeExperience } = useResumeStore();
+  const { showErrorModal } = useToastStore();
   const [generatingId, setGeneratingId] = useState<string | null>(null);
 
   const handleGenerate = async (id: string, position: string, company: string, currentDesc: string) => {
@@ -30,7 +32,7 @@ export default function ExperienceForm() {
       
       const result = await res.json();
       if (result.error) {
-        alert("AI Error: " + result.error);
+        showErrorModal("AI Service Error", result.error);
         return;
       }
       if (result.result) {
@@ -38,7 +40,7 @@ export default function ExperienceForm() {
       }
     } catch (error) {
       console.error("Failed to generate experience bullet points", error);
-      alert("Failed to connect to AI service.");
+      showErrorModal("Connection Error", "Failed to connect to AI service. Please check your network or try again.");
     } finally {
       setGeneratingId(null);
     }

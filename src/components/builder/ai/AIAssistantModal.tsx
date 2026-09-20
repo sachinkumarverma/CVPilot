@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
+import { useToastStore } from '@/store/useToastStore';
 import { X, Sparkles, Loader2, Target, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function AIAssistantModal({ onClose }: { onClose: () => void }) {
   const { data, updateSummary, updateSkills, addExperience, updateExperience, addProject, updateProject, setDocumentName } = useResumeStore();
+  const { showErrorModal } = useToastStore();
   
   const [tab, setTab] = useState<'generate' | 'score'>('generate');
   const [loading, setLoading] = useState(false);
@@ -32,6 +34,11 @@ export default function AIAssistantModal({ onClose }: { onClose: () => void }) {
         })
       });
       const generated = await res.json();
+
+      if (generated.error) {
+        showErrorModal('AI Service Error', generated.error);
+        return;
+      }
       
       if (generated.summary) updateSummary(generated.summary);
       if (generated.skills) updateSkills(generated.skills);
@@ -70,6 +77,7 @@ export default function AIAssistantModal({ onClose }: { onClose: () => void }) {
       onClose();
     } catch (error) {
       console.error(error);
+      showErrorModal('Connection Error', 'Failed to connect to AI service. Please check your network or try again.');
     } finally {
       setLoading(false);
     }
@@ -87,9 +95,14 @@ export default function AIAssistantModal({ onClose }: { onClose: () => void }) {
         })
       });
       const result = await res.json();
+      if (result.error) {
+        showErrorModal('AI Service Error', result.error);
+        return;
+      }
       setScoreResult(result);
     } catch (error) {
       console.error(error);
+      showErrorModal('Connection Error', 'Failed to connect to AI service. Please check your network or try again.');
     } finally {
       setLoading(false);
     }

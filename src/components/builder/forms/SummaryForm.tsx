@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
-import { Sparkles, Loader2 } from 'lucide-react';
-import { AlertCircle } from 'lucide-react';
+import { useToastStore } from '@/store/useToastStore';
+import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
 
 export default function SummaryForm() {
   const { data, updateSummary } = useResumeStore();
+  const { showToast, showErrorModal } = useToastStore();
   const [isGenerating, setIsGenerating] = useState(false);
   const [isManual, setIsManual] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -21,7 +22,7 @@ export default function SummaryForm() {
 
   const handleGenerate = async () => {
     if (!data.summary && !hasContext) {
-      alert("Please add some Skills or Work Experience first so the AI can write an accurate summary tailored to you!");
+      showToast("Context Required", "Please add some Skills or Work Experience first so the AI can write an accurate summary tailored to you!", "warning");
       return;
     }
 
@@ -45,7 +46,7 @@ export default function SummaryForm() {
       
       const result = await res.json();
       if (result.error) {
-        alert("AI Error: " + result.error);
+        showErrorModal("AI Service Error", result.error);
         return;
       }
       if (result.result) {
@@ -53,7 +54,7 @@ export default function SummaryForm() {
       }
     } catch (error) {
       console.error("Failed to generate summary", error);
-      alert("Failed to connect to AI service.");
+      showErrorModal("Connection Error", "Failed to connect to AI service. Please check your network or try again.");
     } finally {
       setIsGenerating(false);
     }
