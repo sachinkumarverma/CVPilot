@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Sparkles, CheckCircle, FileText, ArrowRight, Mail, MapPin, Globe, User, Briefcase, Award } from 'lucide-react';
+import { TypewriterTitle } from '@/components/ui/TypewriterTitle';
 
 export default function Home() {
   const containerVariants = {
@@ -45,8 +46,14 @@ export default function Home() {
             <span>AI-Powered Resume Generation</span>
           </motion.div>
           
-          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
-            Land your dream job with a <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">perfect resume</span>
+          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6 min-h-[1.3em]">
+            <TypewriterTitle
+              part1="Land your dream job with a "
+              part2="perfect resume"
+              part2ClassName="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400"
+              speed={45}
+              delay={250}
+            />
           </motion.h1>
           
           <motion.p variants={itemVariants} className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
