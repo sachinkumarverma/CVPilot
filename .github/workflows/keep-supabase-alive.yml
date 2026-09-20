@@ -14,14 +14,24 @@ jobs:
         # Hitting /rest/v1/ executes a query on PostgreSQL, registering real database activity
         # which prevents Supabase from auto-pausing the project due to inactivity.
         run: |
-          echo "Pinging Supabase PostgREST DB endpoint..."
-          curl -s -f "${{ secrets.SUPABASE_URL }}/rest/v1/" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" > /dev/null
+          URL="${{ secrets.SUPABASE_URL }}"
+          URL="${URL%/}"
 
-          echo "Pinging Supabase Auth endpoint..."
-          curl -s -f "${{ secrets.SUPABASE_URL }}/auth/v1/health" \
+          echo "Pinging Supabase PostgREST DB endpoint ($URL/rest/v1/)..."
+          DB_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/rest/v1/" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" > /dev/null
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          echo "PostgREST DB Response Code: $DB_STATUS"
 
-          echo "Supabase successfully pinged!"
+          echo "Pinging Supabase Auth endpoint ($URL/auth/v1/health)..."
+          AUTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/auth/v1/health" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          echo "Auth Response Code: $AUTH_STATUS"
+
+          if [ "$DB_STATUS" = "000" ] || [ "$AUTH_STATUS" = "000" ]; then
+            echo "Error: Could not connect to Supabase URL. Please check SUPABASE_URL in GitHub Secrets."
+            exit 1
+          fi
+
+          echo "Supabase successfully pinged! DB Status: $DB_STATUS | Auth Status: $AUTH_STATUS"
