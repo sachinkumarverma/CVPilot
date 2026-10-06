@@ -1,37 +1,171 @@
 name: Keep Supabase Alive
+
 on:
   schedule:
-    # Runs at 00:00 UTC every 3 days
-    - cron: '0 0 */3 * *'
-  workflow_dispatch: # Allows you to run it manually from the Actions tab
+    # Runs once daily at 00:17 UTC
+    - cron: '17 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  ping:
+  ping-database:
+    name: Supabase Health Check & Keep-Alive
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Ping Supabase Database & Auth API
-        # We query the PostgREST DB endpoint (/rest/v1/) and Auth endpoint.
-        # Hitting /rest/v1/ executes a query on PostgreSQL, registering real database activity
-        # which prevents Supabase from auto-pausing the project due to inactivity.
+      - name: Execute Read-Only Database Query
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          URL="${{ secrets.SUPABASE_URL }}"
-          URL="${URL%/}"
+          set -eo pipefail
 
-          echo "Pinging Supabase PostgREST DB endpoint ($URL/rest/v1/)..."
-          DB_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/rest/v1/" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
-          echo "PostgREST DB Response Code: $DB_STATUS"
-
-          echo "Pinging Supabase Auth endpoint ($URL/auth/v1/health)..."
-          AUTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/auth/v1/health" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
-          echo "Auth Response Code: $AUTH_STATUS"
-
-          if [ "$DB_STATUS" = "000" ] || [ "$AUTH_STATUS" = "000" ]; then
-            echo "Error: Could not connect to Supabase URL. Please check SUPABASE_URL in GitHub Secrets."
+          # Validate required secrets
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "::error::SUPABASE_URL secret is missing or empty. Please configure it in repository secrets."
+            if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+              echo "### ❌ Supabase Keep-Alive Failed" >> "$GITHUB_STEP_SUMMARY"
+              echo "Error: \`SUPABASE_URL\` secret is not configured." >> "$GITHUB_STEP_SUMMARY"
+            fi
             exit 1
           fi
 
-          echo "Supabase successfully pinged! DB Status: $DB_STATUS | Auth Status: $AUTH_STATUS"
+          if [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::SUPABASE_ANON_KEY secret is missing or empty. Please configure it in repository secrets."
+            if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+              echo "### ❌ Supabase Keep-Alive Failed" >> "$GITHUB_STEP_SUMMARY"
+              echo "Error: \`SUPABASE_ANON_KEY\` secret is not configured." >> "$GITHUB_STEP_SUMMARY"
+            fi
+            exit 1
+          fi
+
+          # Normalize Supabase URL (strip trailing slashes)
+          CLEAN_URL="${SUPABASE_URL%/}"
+
+          # Target read-only query on dedicated health check table
+          TARGET_ENDPOINT="${CLEAN_URL}/rest/v1/_health_check?select=status&id=eq.1"
+
+          echo "Pinging Supabase database via PostgREST endpoint: ${CLEAN_URL}/rest/v1/_health_check"
+
+          MAX_ATTEMPTS=3
+          ATTEMPT=1
+          SUCCESS=0
+          LAST_HTTP_CODE=""
+          LAST_ERROR=""
+
+          while [ "$ATTEMPT" -le "$MAX_ATTEMPTS" ]; do
+            echo "--- Attempt $ATTEMPT of $MAX_ATTEMPTS ---"
+
+            BODY_FILE=$(mktemp)
+            HEADER_FILE=$(mktemp)
+            CURL_EXIT_CODE=0
+
+            # Execute curl request with connection and total timeouts
+            # Never output keys or authorization headers into logs
+            HTTP_CODE=$(curl -sS -o "$BODY_FILE" -D "$HEADER_FILE" -w "%{http_code}" \
+              --connect-timeout 10 \
+              --max-time 30 \
+              -H "apikey: $SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+              -H "Accept: application/json" \
+              "$TARGET_ENDPOINT") || CURL_EXIT_CODE=$?
+
+            BODY_CONTENT=$(cat "$BODY_FILE" 2>/dev/null || echo "")
+            rm -f "$BODY_FILE" "$HEADER_FILE"
+
+            echo "HTTP Status Code: $HTTP_CODE (curl exit code: $CURL_EXIT_CODE)"
+
+            if [ "$CURL_EXIT_CODE" -ne 0 ]; then
+              LAST_ERROR="Network/transport failure (curl exit code: $CURL_EXIT_CODE)"
+              echo "::warning::Transport error on attempt $ATTEMPT: $LAST_ERROR"
+            elif [ "$HTTP_CODE" = "200" ]; then
+              # Validate response contains the expected fixed row
+              if echo "$BODY_CONTENT" | grep -q '"status"[[:space:]]*:[[:space:]]*"ok"'; then
+                echo "Database query successfully verified. Received expected status payload."
+                SUCCESS=1
+                LAST_HTTP_CODE="200"
+                break
+              elif [ "$BODY_CONTENT" = "[]" ] || [ -z "$BODY_CONTENT" ]; then
+                LAST_ERROR="Received HTTP 200 but response is an empty array or body. Health-check row (id=1) is missing."
+                echo "::error::$LAST_ERROR"
+                LAST_HTTP_CODE="200"
+                break
+              else
+                LAST_ERROR="Received HTTP 200 with unexpected response structure."
+                echo "::error::$LAST_ERROR"
+                LAST_HTTP_CODE="200"
+                break
+              fi
+            elif [ "$HTTP_CODE" = "401" ] || [ "$HTTP_CODE" = "403" ]; then
+              LAST_ERROR="Authentication or permission error (HTTP $HTTP_CODE). Check SUPABASE_ANON_KEY and RLS policies on public._health_check."
+              echo "::error::$LAST_ERROR"
+              LAST_HTTP_CODE="$HTTP_CODE"
+              break
+            elif [ "$HTTP_CODE" = "404" ]; then
+              LAST_ERROR="Endpoint not found (HTTP 404). Ensure table public._health_check exists and migration has been run."
+              echo "::error::$LAST_ERROR"
+              LAST_HTTP_CODE="404"
+              break
+            elif [ "$HTTP_CODE" = "429" ] || [[ "$HTTP_CODE" =~ ^5 ]]; then
+              LAST_ERROR="Server or rate-limit error (HTTP $HTTP_CODE)"
+              echo "::warning::Retryable error on attempt $ATTEMPT: $LAST_ERROR"
+              LAST_HTTP_CODE="$HTTP_CODE"
+            else
+              LAST_ERROR="Unexpected HTTP error ($HTTP_CODE)"
+              echo "::error::$LAST_ERROR"
+              LAST_HTTP_CODE="$HTTP_CODE"
+              break
+            fi
+
+            if [ "$ATTEMPT" -lt "$MAX_ATTEMPTS" ]; then
+              BACKOFF=$(( ATTEMPT * 5 ))
+              echo "Waiting ${BACKOFF}s before retrying..."
+              sleep "$BACKOFF"
+            fi
+            ATTEMPT=$(( ATTEMPT + 1 ))
+          done
+
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+          if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+            if [ "$SUCCESS" -eq 1 ]; then
+              cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ### ✅ Supabase Keep-Alive Database Query Succeeded
+
+          | Property | Value |
+          | :--- | :--- |
+          | **Status** | ✅ Succeeded |
+          | **Timestamp** | \`$TIMESTAMP\` |
+          | **Endpoint** | \`${CLEAN_URL}/rest/v1/_health_check?select=status&id=eq.1\` |
+          | **HTTP Status Code** | \`200 OK\` |
+          | **Query Type** | \`SELECT status FROM public._health_check WHERE id = 1\` |
+          | **Attempt** | $ATTEMPT of $MAX_ATTEMPTS |
+
+          > **Important Note:** This workflow executes a verifiable read-only database query via PostgREST to register activity with your Supabase database instance. Automated pings do not guarantee prevention of Free-tier project pausing (e.g., if GitHub Actions schedules are delayed, dropped, or disabled due to repository inactivity). Upgrading to a paid plan is the official documented method to prevent inactivity pausing.
+          EOF
+            else
+              cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ### ❌ Supabase Keep-Alive Database Query Failed
+
+          | Property | Value |
+          | :--- | :--- |
+          | **Status** | ❌ Failed |
+          | **Timestamp** | \`$TIMESTAMP\` |
+          | **Endpoint** | \`${CLEAN_URL}/rest/v1/_health_check?select=status&id=eq.1\` |
+          | **Last HTTP Code** | \`${LAST_HTTP_CODE:-N/A}\` |
+          | **Error Details** | $LAST_ERROR |
+          | **Attempts** | $ATTEMPT of $MAX_ATTEMPTS |
+
+          > **Important Note:** If your Supabase project is already paused, it must first be manually resumed via the [Supabase Dashboard](https://supabase.com/dashboard) before keep-alive queries can succeed.
+          EOF
+            fi
+          fi
+
+          if [ "$SUCCESS" -ne 1 ]; then
+            echo "::error::Supabase keep-alive check failed: $LAST_ERROR"
+            exit 1
+          fi
+
+          echo "Supabase keep-alive database query succeeded."
