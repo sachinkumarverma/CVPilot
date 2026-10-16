@@ -9,10 +9,10 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
   const { personal, summary, experience, education, skills, projects, certifications, achievements } = data;
 
   return (
-    <div className="w-full min-h-[1131px] bg-white text-gray-900 font-sans flex mx-auto max-w-[800px] shadow-2xl relative overflow-hidden">
+    <div className="w-full min-h-[1131px] print:min-h-0 print:h-auto print:max-w-none print:shadow-none bg-white text-gray-900 font-sans flex mx-auto max-w-[800px] shadow-2xl relative overflow-hidden">
 
       {/* Left Column (Sidebar) */}
-      <div className="w-[35%] bg-[#232E35] text-white p-8 flex flex-col space-y-6">
+      <div className="w-[35%] bg-[#232E35] text-white p-8 print:p-6 print:space-y-4 flex flex-col space-y-6">
 
         {/* Photo, Name, Title */}
         <div className="flex flex-col items-center text-center">
@@ -107,7 +107,7 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
       </div>
 
       {/* Right Column (Main Content) */}
-      <div className="w-[65%] p-10 flex flex-col space-y-6 bg-white">
+      <div className="w-[65%] p-10 print:p-6 print:space-y-4 flex flex-col space-y-6 bg-white">
 
         {/* Professional Summary */}
         {summary && (

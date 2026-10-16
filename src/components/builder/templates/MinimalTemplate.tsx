@@ -8,7 +8,7 @@ export default function MinimalTemplate({ data }: MinimalTemplateProps) {
   const { personal, summary, experience, education, skills } = data;
 
   return (
-    <div className="w-full min-h-[1131px] bg-white text-gray-900 font-serif flex flex-col mx-auto max-w-[800px] shadow-2xl relative overflow-hidden">
+    <div className="w-full min-h-[1131px] print:min-h-0 print:h-auto print:max-w-none print:shadow-none bg-white text-gray-900 font-serif flex flex-col mx-auto max-w-[800px] shadow-2xl relative overflow-hidden">
       
       {/* Top Header */}
       <header className="flex flex-col items-center pt-12 pb-6 bg-white z-10 border-b-2 border-gray-300">
